@@ -109,6 +109,7 @@ class DOMNodeCollection {
 
 }
 
+// end of class
 
 window.$d = function (selector) {
   switch (typeof selector) {
@@ -120,15 +121,15 @@ window.$d = function (selector) {
       if (selector instanceof HTMLElement) {
         return new DOMNodeCollection([selector])
       }
-  }
+    }
+}
 
-  document.addEventListener("DOMContentLoaded", (e) => {
+document.addEventListener("DOMContentLoaded", (e) => {
     _docReady = true;
-    queue.forEach((func) => {
+    _queue.forEach((func) => {
       func();
-    });
   });
-};
+});
 
 window.$d.extend = function(base, ...objects) {
   objects.forEach((object) => {
@@ -161,9 +162,9 @@ window.$d.ajax = function(options) {
     } else {
       defaults.error(xhr.response);
     }
-  };
 
-  xhr.send(JSON.stringify(mergedCall.data));
+    xhr.send(JSON.stringify(mergedCall.data));
+  }
 };
 
 fetchNodesFromDom = function (selector) {

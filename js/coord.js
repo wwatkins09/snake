@@ -6,8 +6,7 @@ class Coord {
   }
 
   plus(otherCoord) {
-    this.row = this.row + otherCoord.row;
-    this.col = this.col + otherCoord.col;
+    return new Coord(this.row + otherCoord.row, this.col + otherCoord.col);
   }
 
   equals(otherCoord) {

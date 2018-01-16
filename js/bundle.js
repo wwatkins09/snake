@@ -67,198 +67,16 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const $d = __webpack_require__(1);
-const Coord = __webpack_require__(2);
+const View = __webpack_require__(3);
+
+window.$d(function() {
+  const rootEl = window.$d('.snake-game');
+  new View(rootEl);
+});
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-const _queue = [];
-let _docReady = false;
-
-
-class DOMNodeCollection {
-  constructor(htmlEls) {
-    this.htmlEls = htmlEls;
-  }
-
-  html(string) {
-    if (typeof string === 'string') {
-      this.htmlEls.forEach((node) => {
-        node.innerHTML = string;
-      });
-    } else {
-      return this.htmlEls[0].innerHTML;
-    }
-  }
-
-  empty() {
-    this.html('');
-  }
-
-  append(arg) {
-    this.htmlEls.forEach( (node) => {
-      node.innerHTML += arg;
-    });
-  }
-
-  attr(attrName, newValue) {
-    if (typeof newValue === 'string' ) {
-      this.htmlEls.forEach( (node) => {
-        node.setAttribute(attrName, newValue)
-      });
-    } else {
-      return this.htmlEls[0].getAttribute(attrName);
-    }
-  }
-
-  addClass(className) {
-    this.htmlEls.forEach ( (node) => {
-      node.classList.add(className);
-    });
-  }
-
-  removeClass(className) {
-    this.htmlEls.forEach ( (node) => {
-      node.classList.remove(className);
-    });
-  }
-
-  children() {
-    let result = [];
-    this.htmlEls.forEach( (node) => {
-      let nodeChildren = node.children;
-      result = result.concat(Array.from(nodeChildren));
-    });
-    return new DOMNodeCollection(result);
-  }
-
-  parent() {
-    let result = [];
-    this.htmlEls.forEach( (node) => {
-      let nodeParent = node.parentNode;
-      if (!result.includes(nodeParent)) {
-        result.push(nodeParent);
-        }
-      });
-      return new DOMNodeCollection(result);
-    }
-
-
-  find(selector) {
-    let result = [];
-    this.htmlEls.forEach( (node) => {
-      let elementList = node.querySelectorAll(selector);
-      result = result.concat(Array.from(elementList));
-    });
-    return new DOMNodeCollection(result);
-  }
-
-  remove () {
-    this.empty();
-    this.htmlEls = [];
-  }
-
-  on (eventName, handler) {
-    this.htmlEls.forEach( (node) => {
-      node.addEventListener(eventName, handler);
-      const eventKey = `domani-${eventName}`;
-      if (typeof node[eventKey] === 'undefined') {
-        node[eventKey] = [];
-      }
-      node[eventKey].push(handler);
-    });
-  }
-
-  off (eventName) {
-    this.htmlEls.forEach( (node) => {
-      const eventKey = `domani-${eventName}`;
-      if (node[eventKey]) {
-        node[eventKey].forEach((handler) => {
-          node.removeEventListener(eventName, handler);
-        });
-      }
-      node[eventKey] = [];
-    });
-  }
-
-}
-
-
-window.$d = function (selector) {
-  switch (typeof selector) {
-    case 'function':
-      return registerDocReadyCallback(selector);
-    case 'string':
-      return fetchNodesFromDom(selector);
-    case 'object':
-      if (selector instanceof HTMLElement) {
-        return new DOMNodeCollection([selector])
-      }
-  }
-
-  document.addEventListener("DOMContentLoaded", (e) => {
-    _docReady = true;
-    queue.forEach((func) => {
-      func();
-    });
-  });
-};
-
-window.$d.extend = function(base, ...objects) {
-  objects.forEach((object) => {
-    for (const key in object) {
-      base[key] = object[key];
-    }
-  });
-  return base;
-};
-
-window.$d.ajax = function(options) {
-  const defaults = {
-    method: 'GET',
-    url: 'https://www.booknomads.com/api/v0/isbn/9789000035526',
-    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-    data: {},
-    success: () => {},
-    error: () => {},
-  };
-
-  const mergedCall = $d.extend(defaults, options);
-  mergedCall.method = mergedCall.method.toUpperCase();
-
-  const xhr = new XMLHttpRequest();
-  xhr.open(mergedCall.method, mergedCall.url, true);
-
-  xhr.onload = function(e) {
-    if (xhr.status === 200) {
-      defaults.success(xhr.response);
-    } else {
-      defaults.error(xhr.response);
-    }
-  };
-
-  xhr.send(JSON.stringify(mergedCall.data));
-};
-
-fetchNodesFromDom = function (selector) {
-  const nodes = document.querySelectorAll(selector);
-  const nodesArray = Array.from(nodes);
-  return new DOMNodeCollection(nodesArray);
-}
-
-registerDocReadyCallback = function (func) {
-  if (_docReady) {
-    func();
-  } else {
-    _queue.push(func)
-  }
-};
-
-
-/***/ }),
+/* 1 */,
 /* 2 */
 /***/ (function(module, exports) {
 
@@ -270,8 +88,7 @@ class Coord {
   }
 
   plus(otherCoord) {
-    this.row = this.row + otherCoord.row;
-    this.col = this.col + otherCoord.col;
+    return new Coord(this.row + otherCoord.row, this.col + otherCoord.col);
   }
 
   equals(otherCoord) {
@@ -285,6 +102,110 @@ class Coord {
 }
 
 module.exports = Coord;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Board = __webpack_require__(4);
+
+class View {
+
+  constructor(el) {
+    this.$el = el;
+    this.board = new Board();
+    this.$el.on('keydown', this.handleKeyEvent)
+    this.intervalId = window.setInterval(this.step.bind(this), 100);
+    this.setupGrid();
+  }
+
+  setupGrid() {
+    let newHtml = '';
+    for (let i = 0; i < 8; i++) {
+      newHtml += "<ul>";
+      for (let i = 0; i < 8; i++) {
+        newHtml += "<li></li>";
+      }
+      newHtml += "</ul>";
+    }
+    this.$el.html(newHtml);
+  }
+
+  step() {
+    this.board.snake.move();
+  }
+
+  handleKeyEvent(event) {
+    event.preventDefault();
+    let newDirection;
+    switch(event.keyCode) {
+      case 37:
+        newDirection = new Coord(0, -1);
+      case 38:
+        newDirection = new Coord(1, 0);
+      case 39:
+        newDirection = new Coord(0, 1);
+      case 40:
+        newDirection = new Coord(-1, 0);
+    }
+    this.board.snake.turn(newDirection);
+  }
+
+  render() {
+    return (
+      "working!"
+    )
+  }
+
+}
+
+module.exports = View;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Snake = __webpack_require__(5);
+
+class Board {
+
+  constructor() {
+    this.snake = new Snake();
+  }
+
+}
+
+module.exports = Board;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Coord = __webpack_require__(2);
+
+class Snake {
+
+  constructor() {
+    this.direction = new Coord(0,0);
+    this.segments = [new Coord(4,4)];
+  }
+
+  move() {
+    let oldHead = this.segments[0];
+    this.segments.unshift(oldHead.plus(this.direction))
+    this.segments.pop();
+  }
+
+  turn(newDirection) {
+    this.direction = newDirection
+  }
+
+}
+
+module.exports = Snake;
 
 
 /***/ })
