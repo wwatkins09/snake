@@ -143,7 +143,7 @@ window.$d.ajax = function(options) {
   const defaults = {
     method: 'GET',
     url: 'https://www.booknomads.com/api/v0/isbn/9789000035526',
-    contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
     data: {},
     success: () => {},
     error: () => {},
