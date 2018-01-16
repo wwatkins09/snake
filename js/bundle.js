@@ -70,11 +70,6 @@
 const $d = __webpack_require__(1);
 const Coord = __webpack_require__(2);
 
-const coord = new Coord(4, 5)
-const coord2 = new Coord(4,8)
-
-console.log(coord.equals(coord2));
-
 
 /***/ }),
 /* 1 */
