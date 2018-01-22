@@ -64,7 +64,6 @@ class View {
       $d(el).removeClass('snake');
     });
     this.board.snake.segments.forEach((segment) => {
-      // write this into domani!
       $d(`#li${segment.flatten()}`).addClass('snake');
     });
     $d(`#li${this.board.appleCoord.flatten()}`).addClass('apple');
