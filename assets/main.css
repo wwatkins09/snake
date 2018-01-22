@@ -16,3 +16,7 @@ li {
   height: 20px;
   list-style: none;
 }
+
+.snake {
+  background-color: green;
+}
