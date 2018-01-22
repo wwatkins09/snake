@@ -6,6 +6,8 @@ class Snake {
     this.direction = new Coord(-1,0);
     this.segments = [new Coord(10,10)];
     this.segmentNum = 1;
+
+    this.head = this.head.bind(this);
   }
 
   move() {
@@ -32,6 +34,10 @@ class Snake {
 
   eatApple() {
     this.segmentNum += 1;
+  }
+
+  head() {
+    return this.segments[0];
   }
 
 }

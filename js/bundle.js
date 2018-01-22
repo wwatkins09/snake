@@ -96,7 +96,7 @@ class View {
     this.gameOver = this.gameOver.bind(this);
 
     this.$el = el;
-    this.board = new Board((this.$el));
+    this.board = new Board(this.$el);
     this.intervalId = window.setInterval(this.step, 100);
     this.setupGrid();
     document.addEventListener('keydown', this.handleKeyEvent);
@@ -143,13 +143,12 @@ class View {
 
   render() {
     //write this into domani!!!
-    this.$el.find('li').htmlEls.forEach((el) => {
+    this.$el.find('li').each((el) => {
       $d(el).removeClass('snake');
     });
     this.board.snake.segments.forEach((segment) => {
-      const flattenedSegment = (segment.row * 20) + segment.col;
       // write this into domani!
-      $d(document.getElementById(`li${flattenedSegment}`)).addClass('snake');
+      $d(document.getElementById(`li${segment.flatten()}`)).addClass('snake');
     });
     const flattenedApple = (this.board.appleCoord.row * 20) + this.board.appleCoord.col;
     $d(document.getElementById(`li${flattenedApple}`)).addClass('apple');
@@ -157,22 +156,22 @@ class View {
 
    checkIfGameOver() {
      let result = false;
-     this.board.snake.segments.forEach((segment) => {
-       if ((this.board.snake.direction.equals(upCoord) && segment.row <= 0) ||
-         (this.board.snake.direction.equals(downCoord) && segment.row >= 19) ||
-         (this.board.snake.direction.equals(leftCoord) && segment.col <= 0) ||
-         (this.board.snake.direction.equals(rightCoord) && segment.col >= 19) ||
-         (this.board.snake.isOccupying(this.board.snake.segments[0].plus(this.board.snake.direction)))
+     const headCoord = this.board.snake.segments[0];
+       if ((this.board.snake.direction.equals(upCoord) && headCoord.row <= 0) ||
+         (this.board.snake.direction.equals(downCoord) && headCoord.row >= 19) ||
+         (this.board.snake.direction.equals(leftCoord) && headCoord.col <= 0) ||
+         (this.board.snake.direction.equals(rightCoord) && headCoord.col >= 19) ||
+         (this.board.snake.isOccupying(this.board.snake.head().plus(this.board.snake.direction)))
        ) {
            result = true;
          }
-     });
      return result;
    }
 
    gameOver() {
      window.clearInterval(this.intervalId);
-     console.log("working!");
+
+     window.alert("GAME OVER");
    }
 
 }
@@ -248,6 +247,8 @@ class Snake {
     this.direction = new Coord(-1,0);
     this.segments = [new Coord(10,10)];
     this.segmentNum = 1;
+
+    this.head = this.head.bind(this);
   }
 
   move() {
@@ -274,6 +275,10 @@ class Snake {
 
   eatApple() {
     this.segmentNum += 1;
+  }
+
+  head() {
+    return this.segments[0];
   }
 
 }

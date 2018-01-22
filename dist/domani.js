@@ -107,6 +107,11 @@ class DOMNodeCollection {
     });
   }
 
+  each (callback) {
+    this.htmlEls.forEach( (node) => {
+      callback(node);
+    });
+  }
 }
 
 // end of class
