@@ -17,6 +17,10 @@ class Coord {
     return (this.row === otherCoord.row * -1 && this.col === otherCoord.col * -1)
   }
 
+  flatten() {
+    return (this.row * 20) + this.col;
+  }
+
 }
 
 module.exports = Coord;

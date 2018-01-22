@@ -15,7 +15,7 @@ class View {
     this.gameOver = this.gameOver.bind(this);
 
     this.$el = el;
-    this.board = new Board();
+    this.board = new Board((this.$el));
     this.intervalId = window.setInterval(this.step, 100);
     this.setupGrid();
     document.addEventListener('keydown', this.handleKeyEvent);
@@ -37,7 +37,7 @@ class View {
     if (this.checkIfGameOver()) {
       this.gameOver();
     } else {
-      this.board.snake.move();
+      this.board.move();
       this.render();
     }
   }
@@ -70,6 +70,8 @@ class View {
       // write this into domani!
       $d(document.getElementById(`li${flattenedSegment}`)).addClass('snake');
     });
+    const flattenedApple = (this.board.appleCoord.row * 20) + this.board.appleCoord.col;
+    $d(document.getElementById(`li${flattenedApple}`)).addClass('apple');
    }
 
    checkIfGameOver() {

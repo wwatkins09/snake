@@ -5,7 +5,7 @@ class Snake {
   constructor() {
     this.direction = new Coord(-1,0);
     this.segments = [new Coord(10,10)];
-    this.segmentNum = 10;
+    this.segmentNum = 1;
   }
 
   move() {
@@ -28,6 +28,10 @@ class Snake {
       }
     });
     return result;
+  }
+
+  eatApple() {
+    this.segmentNum += 1;
   }
 
 }

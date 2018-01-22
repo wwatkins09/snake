@@ -96,7 +96,7 @@ class View {
     this.gameOver = this.gameOver.bind(this);
 
     this.$el = el;
-    this.board = new Board();
+    this.board = new Board((this.$el));
     this.intervalId = window.setInterval(this.step, 100);
     this.setupGrid();
     document.addEventListener('keydown', this.handleKeyEvent);
@@ -118,7 +118,7 @@ class View {
     if (this.checkIfGameOver()) {
       this.gameOver();
     } else {
-      this.board.snake.move();
+      this.board.move();
       this.render();
     }
   }
@@ -151,6 +151,8 @@ class View {
       // write this into domani!
       $d(document.getElementById(`li${flattenedSegment}`)).addClass('snake');
     });
+    const flattenedApple = (this.board.appleCoord.row * 20) + this.board.appleCoord.col;
+    $d(document.getElementById(`li${flattenedApple}`)).addClass('apple');
    }
 
    checkIfGameOver() {
@@ -183,12 +185,51 @@ module.exports = View;
 /***/ (function(module, exports, __webpack_require__) {
 
 const Snake = __webpack_require__(3);
+const Coord = __webpack_require__(4);
 
 class Board {
 
   constructor() {
+    this.generateApple = this.generateApple.bind(this);
+    this.move = this.move.bind(this);
+    this.eatApple = this.eatApple.bind(this);
+
     this.snake = new Snake();
+    this.generateApple();
   }
+
+  move() {
+    this.snake.move();
+    if (this.snake.segments[0].equals(this.appleCoord)) {
+      this.eatApple();
+    }
+  }
+
+  generateApple() {
+    const appleCoord = new Coord(this.getRandomArbitrary(0, 20), this.getRandomArbitrary(0, 20));
+    let taken = false;
+    this.snake.segments.forEach((segment) => {
+      if (segment.equals(appleCoord)) {
+        taken = true;
+      }
+    });
+    if (taken) {
+      this.generateApple();
+    } else {
+      this.appleCoord = appleCoord;
+    }
+  }
+
+  eatApple() {
+    this.snake.segmentNum += 1;
+    $d(document.getElementById(`li${this.appleCoord.flatten()}`)).removeClass('apple');
+    this.generateApple();
+  }
+
+  getRandomArbitrary(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+
 
 }
 
@@ -206,7 +247,7 @@ class Snake {
   constructor() {
     this.direction = new Coord(-1,0);
     this.segments = [new Coord(10,10)];
-    this.segmentNum = 10;
+    this.segmentNum = 1;
   }
 
   move() {
@@ -229,6 +270,10 @@ class Snake {
       }
     });
     return result;
+  }
+
+  eatApple() {
+    this.segmentNum += 1;
   }
 
 }
@@ -257,6 +302,10 @@ class Coord {
 
   isOpposite(otherCoord) {
     return (this.row === otherCoord.row * -1 && this.col === otherCoord.col * -1)
+  }
+
+  flatten() {
+    return (this.row * 20) + this.col;
   }
 
 }
