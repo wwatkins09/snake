@@ -12,9 +12,9 @@ class View {
 
   setupGrid() {
     let newHtml = '';
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 20; i++) {
       newHtml += "<ul>";
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 20; i++) {
         newHtml += "<li></li>";
       }
       newHtml += "</ul>";

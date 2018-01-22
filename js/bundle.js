@@ -67,7 +67,7 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const View = __webpack_require__(3);
+const View = __webpack_require__(1);
 
 window.$d(function() {
   const rootEl = window.$d('.snake-game');
@@ -76,39 +76,10 @@ window.$d(function() {
 
 
 /***/ }),
-/* 1 */,
-/* 2 */
-/***/ (function(module, exports) {
-
-class Coord {
-
-  constructor(row, col) {
-    this.row = row;
-    this.col = col;
-  }
-
-  plus(otherCoord) {
-    return new Coord(this.row + otherCoord.row, this.col + otherCoord.col);
-  }
-
-  equals(otherCoord) {
-    return (this.row === otherCoord.row && this.col === otherCoord.col);
-  }
-
-  isOpposite(otherCoord) {
-    return (this.row === otherCoord.row * -1 && this.col === otherCoord.col * -1)
-  }
-
-}
-
-module.exports = Coord;
-
-
-/***/ }),
-/* 3 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Board = __webpack_require__(4);
+const Board = __webpack_require__(2);
 
 class View {
 
@@ -122,9 +93,9 @@ class View {
 
   setupGrid() {
     let newHtml = '';
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 20; i++) {
       newHtml += "<ul>";
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 20; i++) {
         newHtml += "<li></li>";
       }
       newHtml += "</ul>";
@@ -164,10 +135,10 @@ module.exports = View;
 
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Snake = __webpack_require__(5);
+const Snake = __webpack_require__(3);
 
 class Board {
 
@@ -181,10 +152,10 @@ module.exports = Board;
 
 
 /***/ }),
-/* 5 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Coord = __webpack_require__(2);
+const Coord = __webpack_require__(4);
 
 class Snake {
 
@@ -206,6 +177,34 @@ class Snake {
 }
 
 module.exports = Snake;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+class Coord {
+
+  constructor(row, col) {
+    this.row = row;
+    this.col = col;
+  }
+
+  plus(otherCoord) {
+    return new Coord(this.row + otherCoord.row, this.col + otherCoord.col);
+  }
+
+  equals(otherCoord) {
+    return (this.row === otherCoord.row && this.col === otherCoord.col);
+  }
+
+  isOpposite(otherCoord) {
+    return (this.row === otherCoord.row * -1 && this.col === otherCoord.col * -1)
+  }
+
+}
+
+module.exports = Coord;
 
 
 /***/ })
