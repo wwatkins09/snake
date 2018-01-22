@@ -1,9 +1,5 @@
 const Board = require('./board.js');
 const Coord = require('./coord.js');
-const leftCoord = new Coord(0, -1);
-const upCoord = new Coord(-1, 0);
-const rightCoord = new Coord(0, 1);
-const downCoord = new Coord(1, 0);
 
 class View {
 
@@ -57,34 +53,25 @@ class View {
     if (event.keyCode === 40) {
       newDirection = new Coord(1, 0);
     }
-    this.board.snake.turn(newDirection);
+
+    if (newDirection) {
+      this.board.turnSnake(newDirection);
+    }
   }
 
   render() {
-    //write this into domani!!!
     this.$el.find('li').each((el) => {
       $d(el).removeClass('snake');
     });
     this.board.snake.segments.forEach((segment) => {
       // write this into domani!
-      $d(document.getElementById(`li${segment.flatten()}`)).addClass('snake');
+      $d(`#li${segment.flatten()}`).addClass('snake');
     });
-    const flattenedApple = (this.board.appleCoord.row * 20) + this.board.appleCoord.col;
-    $d(document.getElementById(`li${flattenedApple}`)).addClass('apple');
+    $d(`#li${this.board.appleCoord.flatten()}`).addClass('apple');
    }
 
    checkIfGameOver() {
-     let result = false;
-     const headCoord = this.board.snake.segments[0];
-       if ((this.board.snake.direction.equals(upCoord) && headCoord.row <= 0) ||
-         (this.board.snake.direction.equals(downCoord) && headCoord.row >= 19) ||
-         (this.board.snake.direction.equals(leftCoord) && headCoord.col <= 0) ||
-         (this.board.snake.direction.equals(rightCoord) && headCoord.col >= 19) ||
-         (this.board.snake.isOccupying(this.board.snake.head().plus(this.board.snake.direction)))
-       ) {
-           result = true;
-         }
-     return result;
+     return this.board.checkIfGameOver();
    }
 
    gameOver() {

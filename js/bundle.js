@@ -60,14 +60,46 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+class Coord {
+
+  constructor(row, col) {
+    this.row = row;
+    this.col = col;
+  }
+
+  plus(otherCoord) {
+    return new Coord(this.row + otherCoord.row, this.col + otherCoord.col);
+  }
+
+  equals(otherCoord) {
+    return (this.row === otherCoord.row && this.col === otherCoord.col);
+  }
+
+  isOpposite(otherCoord) {
+    return (this.row === otherCoord.row * -1 && this.col === otherCoord.col * -1)
+  }
+
+  flatten() {
+    return (this.row * 20) + this.col;
+  }
+
+}
+
+module.exports = Coord;
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const View = __webpack_require__(1);
+const View = __webpack_require__(2);
 
 window.$d(function() {
   const rootEl = window.$d('.snake-game');
@@ -76,15 +108,11 @@ window.$d(function() {
 
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Board = __webpack_require__(2);
-const Coord = __webpack_require__(4);
-const leftCoord = new Coord(0, -1);
-const upCoord = new Coord(-1, 0);
-const rightCoord = new Coord(0, 1);
-const downCoord = new Coord(1, 0);
+const Board = __webpack_require__(3);
+const Coord = __webpack_require__(0);
 
 class View {
 
@@ -138,34 +166,25 @@ class View {
     if (event.keyCode === 40) {
       newDirection = new Coord(1, 0);
     }
-    this.board.snake.turn(newDirection);
+
+    if (newDirection) {
+      this.board.turnSnake(newDirection);
+    }
   }
 
   render() {
-    //write this into domani!!!
     this.$el.find('li').each((el) => {
       $d(el).removeClass('snake');
     });
     this.board.snake.segments.forEach((segment) => {
       // write this into domani!
-      $d(document.getElementById(`li${segment.flatten()}`)).addClass('snake');
+      $d(`#li${segment.flatten()}`).addClass('snake');
     });
-    const flattenedApple = (this.board.appleCoord.row * 20) + this.board.appleCoord.col;
-    $d(document.getElementById(`li${flattenedApple}`)).addClass('apple');
+    $d(`#li${this.board.appleCoord.flatten()}`).addClass('apple');
    }
 
    checkIfGameOver() {
-     let result = false;
-     const headCoord = this.board.snake.segments[0];
-       if ((this.board.snake.direction.equals(upCoord) && headCoord.row <= 0) ||
-         (this.board.snake.direction.equals(downCoord) && headCoord.row >= 19) ||
-         (this.board.snake.direction.equals(leftCoord) && headCoord.col <= 0) ||
-         (this.board.snake.direction.equals(rightCoord) && headCoord.col >= 19) ||
-         (this.board.snake.isOccupying(this.board.snake.head().plus(this.board.snake.direction)))
-       ) {
-           result = true;
-         }
-     return result;
+     return this.board.checkIfGameOver();
    }
 
    gameOver() {
@@ -180,11 +199,15 @@ module.exports = View;
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Snake = __webpack_require__(3);
-const Coord = __webpack_require__(4);
+const Snake = __webpack_require__(4);
+const Coord = __webpack_require__(0);
+const leftCoord = new Coord(0, -1);
+const upCoord = new Coord(-1, 0);
+const rightCoord = new Coord(0, 1);
+const downCoord = new Coord(1, 0);
 
 class Board {
 
@@ -192,6 +215,7 @@ class Board {
     this.generateApple = this.generateApple.bind(this);
     this.move = this.move.bind(this);
     this.eatApple = this.eatApple.bind(this);
+    this.checkIfGameOver = this.checkIfGameOver.bind(this);
 
     this.snake = new Snake();
     this.generateApple();
@@ -225,6 +249,26 @@ class Board {
     this.generateApple();
   }
 
+  turnSnake(newDirection) {
+    if (!newDirection.isOpposite(this.snake.direction)) {
+      this.snake.turn(newDirection);
+    }
+  }
+
+  checkIfGameOver() {
+    let result = false;
+    const headCoord = this.snake.head();
+      if ((this.snake.direction.equals(upCoord) && headCoord.row <= 0) ||
+        (this.snake.direction.equals(downCoord) && headCoord.row >= 19) ||
+        (this.snake.direction.equals(leftCoord) && headCoord.col <= 0) ||
+        (this.snake.direction.equals(rightCoord) && headCoord.col >= 19) ||
+        (this.snake.isOccupying(this.snake.head().plus(this.snake.direction)))
+      ) {
+          result = true;
+        }
+    return result;
+  }
+
   getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
@@ -236,10 +280,10 @@ module.exports = Board;
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Coord = __webpack_require__(4);
+const Coord = __webpack_require__(0);
 
 class Snake {
 
@@ -284,38 +328,6 @@ class Snake {
 }
 
 module.exports = Snake;
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-class Coord {
-
-  constructor(row, col) {
-    this.row = row;
-    this.col = col;
-  }
-
-  plus(otherCoord) {
-    return new Coord(this.row + otherCoord.row, this.col + otherCoord.col);
-  }
-
-  equals(otherCoord) {
-    return (this.row === otherCoord.row && this.col === otherCoord.col);
-  }
-
-  isOpposite(otherCoord) {
-    return (this.row === otherCoord.row * -1 && this.col === otherCoord.col * -1)
-  }
-
-  flatten() {
-    return (this.row * 20) + this.col;
-  }
-
-}
-
-module.exports = Coord;
 
 
 /***/ })

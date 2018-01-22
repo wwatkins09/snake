@@ -120,14 +120,18 @@ window.$d = function (selector) {
   switch (typeof selector) {
     case 'function':
       return registerDocReadyCallback(selector);
-    case 'string':
-      return fetchNodesFromDom(selector);
+      case 'string':
+        if (selector[0] === '#') {
+          return new DOMNodeCollection([document.getElementById(selector.slice(1))]);
+        } else {
+          return fetchNodesFromDom(selector);
+        }
     case 'object':
       if (selector instanceof HTMLElement) {
         return new DOMNodeCollection([selector])
       }
     }
-}
+  }
 
 document.addEventListener("DOMContentLoaded", (e) => {
     _docReady = true;
