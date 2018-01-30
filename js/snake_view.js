@@ -9,12 +9,12 @@ class View {
     this.handleKeyEvent = this.handleKeyEvent.bind(this);
     this.checkIfGameOver = this.checkIfGameOver.bind(this);
     this.gameOver = this.gameOver.bind(this);
+    this.handleStart = this.handleStart.bind(this);
 
     this.$el = el;
-    this.board = new Board(this.$el);
-    this.intervalId = window.setInterval(this.step, 100);
-    this.setupGrid();
-    document.addEventListener('keydown', this.handleKeyEvent);
+    this.startModal = window.$d('#start-modal');
+    this.endModal = window.$d('.snake-game');
+    document.addEventListener('keydown', this.handleStart);
   }
 
   setupGrid() {
@@ -35,6 +35,19 @@ class View {
     } else {
       this.board.move();
       this.render();
+    }
+  }
+
+  handleStart(event) {
+    event.preventDefault;
+    if (event.keyCode === 83) {
+      this.startModal.removeClass("showing");
+      this.startModal.addClass("hidden");
+      this.board = new Board(this.$el);
+      this.intervalId = window.setInterval(this.step, 100);
+      this.setupGrid();
+      document.removeEventListener('keydown', this.handleStart);
+      document.addEventListener('keydown', this.handleKeyEvent);
     }
   }
 

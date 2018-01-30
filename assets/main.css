@@ -48,7 +48,7 @@ main {
   font-size: 16px;
 }
 
-#modal {
+.modal {
   position: fixed;
   left: 377px;
   top: 100px;
@@ -59,7 +59,7 @@ main {
   justify-content: center;
 }
 
-#modal p {
+.modal p {
   text-align: center;
 }
 
