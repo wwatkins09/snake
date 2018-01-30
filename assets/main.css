@@ -8,7 +8,6 @@ body {
   border: 10px solid black;
   width: 400px;
   height: 400px;
-  margin: auto;
   background-color: white;
   z-index: 10;
 }
@@ -50,8 +49,8 @@ main {
 
 .modal {
   position: fixed;
-  left: 377px;
-  top: 100px;
+  left: 184px;
+  top: 120px;
   border: 1px solid black;
   padding: 20px;
   display: flex;
