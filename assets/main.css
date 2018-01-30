@@ -2,6 +2,7 @@
   border: 10px solid black;
   width: 400px;
   height: 400px;
+  margin: auto;
 }
 
 ul {
@@ -23,4 +24,21 @@ li {
 
 .apple {
   background-color: red;
+}
+
+h1 {
+  font-family: sans-serif;
+  margin: auto;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.description {
+  font-family: sans-serif;
+  font-size: 16px;
+  
 }
