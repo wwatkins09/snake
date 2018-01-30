@@ -14,7 +14,7 @@ class View {
     this.$el = el;
     this.startModal = window.$d('#start-modal');
     this.endModal = window.$d('#end-modal');
-    this.startModal.on('click', this.handleStart);
+    this.startModal.keydown(this.handleStart);
   }
 
   setupGrid() {
@@ -39,14 +39,17 @@ class View {
   }
 
   handleStart(event) {
-    this.startModal.off('click', this.handleStart)
-    this.startModal.removeClass("showing");
-    this.startModal.addClass("hidden");
-    this.endModal.removeClass("showing");
-    this.endModal.addClass("hidden");
-    this.board = new Board(this.$el);
-    this.intervalId = window.setInterval(this.step, 100);
-    this.setupGrid();
+    if (event.keyCode === 83) {
+      this.startModal.removeKeydown(this.handleStart)
+      this.startModal.removeClass("showing");
+      this.startModal.addClass("hidden");
+      this.endModal.removeClass("showing");
+      this.endModal.addClass("hidden");
+      this.board = new Board(this.$el);
+      this.intervalId = window.setInterval(this.step, 100);
+      this.setupGrid();
+      this.$el.keydown(this.handleKeyEvent);
+      }
     }
 
   handleKeyEvent(event) {
@@ -86,9 +89,10 @@ class View {
 
    gameOver() {
      window.clearInterval(this.intervalId);
+     this.$el.removeKeydown(this.handleKeyEvent);
      this.endModal.removeClass('hidden');
      this.endModal.addClass('showing');
-     this.endModal.on('click', this.handleStart);
+     this.endModal.keydown(this.handleStart);
    }
 
 }

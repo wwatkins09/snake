@@ -107,6 +107,14 @@ class DOMNodeCollection {
     });
   }
 
+  keydown (callback) {
+    document.addEventListener('keydown', callback);
+  }
+
+  removeKeydown (callback) {
+    document.removeEventListener('keydown', callback);
+  }
+
   each (callback) {
     this.htmlEls.forEach( (node) => {
       callback(node);
