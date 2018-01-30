@@ -126,7 +126,7 @@ class View {
 
     this.$el = el;
     this.startModal = window.$d('#start-modal');
-    this.endModal = window.$d('.snake-game');
+    this.endModal = window.$d('#end-modal');
     document.addEventListener('keydown', this.handleStart);
   }
 
@@ -156,6 +156,8 @@ class View {
     if (event.keyCode === 83) {
       this.startModal.removeClass("showing");
       this.startModal.addClass("hidden");
+      this.endModal.removeClass("showing");
+      this.endModal.addClass("hidden");
       this.board = new Board(this.$el);
       this.intervalId = window.setInterval(this.step, 100);
       this.setupGrid();
@@ -201,8 +203,9 @@ class View {
 
    gameOver() {
      window.clearInterval(this.intervalId);
-
-     window.alert("GAME OVER");
+     this.endModal.removeClass('hidden');
+     this.endModal.addClass('showing');
+     document.addEventListener('keydown', this.handleStart);
    }
 
 }
