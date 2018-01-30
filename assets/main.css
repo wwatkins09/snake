@@ -1,5 +1,7 @@
 body {
   background-color: #ffe4b5;
+  position: relative;
+  font-family: sans-serif;
 }
 
 .snake-game {
@@ -8,6 +10,7 @@ body {
   height: 400px;
   margin: auto;
   background-color: white;
+  z-index: 10;
 }
 
 ul {
@@ -32,7 +35,6 @@ li {
 }
 
 h1 {
-  font-family: sans-serif;
   margin: auto;
 }
 
@@ -43,7 +45,28 @@ main {
 }
 
 .description {
-  font-family: sans-serif;
   font-size: 16px;
+}
 
+#modal {
+  position: fixed;
+  left: 377px;
+  top: 100px;
+  border: 1px solid black;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#modal p {
+  text-align: center;
+}
+
+.showing {
+  z-index: 50;
+}
+
+.hidden {
+  z-index: 0;
 }
