@@ -127,7 +127,7 @@ class View {
     this.$el = el;
     this.startModal = window.$d('#start-modal');
     this.endModal = window.$d('#end-modal');
-    document.addEventListener('keydown', this.handleStart);
+    this.startModal.on('click', this.handleStart);
   }
 
   setupGrid() {
@@ -152,19 +152,15 @@ class View {
   }
 
   handleStart(event) {
-    event.preventDefault;
-    if (event.keyCode === 83) {
-      this.startModal.removeClass("showing");
-      this.startModal.addClass("hidden");
-      this.endModal.removeClass("showing");
-      this.endModal.addClass("hidden");
-      this.board = new Board(this.$el);
-      this.intervalId = window.setInterval(this.step, 100);
-      this.setupGrid();
-      document.removeEventListener('keydown', this.handleStart);
-      document.addEventListener('keydown', this.handleKeyEvent);
+    this.startModal.off('click', this.handleStart)
+    this.startModal.removeClass("showing");
+    this.startModal.addClass("hidden");
+    this.endModal.removeClass("showing");
+    this.endModal.addClass("hidden");
+    this.board = new Board(this.$el);
+    this.intervalId = window.setInterval(this.step, 100);
+    this.setupGrid();
     }
-  }
 
   handleKeyEvent(event) {
     event.preventDefault();
@@ -205,7 +201,7 @@ class View {
      window.clearInterval(this.intervalId);
      this.endModal.removeClass('hidden');
      this.endModal.addClass('showing');
-     document.addEventListener('keydown', this.handleStart);
+     this.endModal.on('click', this.handleStart);
    }
 
 }
