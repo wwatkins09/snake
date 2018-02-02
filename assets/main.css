@@ -1,6 +1,5 @@
 body {
   background-color: #ffe4b5;
-  position: relative;
   font-family: sans-serif;
 }
 
@@ -9,8 +8,9 @@ body {
   width: 400px;
   height: 400px;
   background-color: white;
-  z-index: 10;
   margin: auto;
+  position: relative;
+
 }
 
 ul {
@@ -42,6 +42,7 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin: auto;
 }
 
 .description {
@@ -51,7 +52,7 @@ main {
 .modal {
   position: fixed;
   left: 43.05%;
-  top: 10%;
+  top: 100px;
   width: 128px;
   border: 1px solid black;
   padding: 20px;
@@ -72,5 +73,5 @@ main {
 }
 
 .hidden {
-  z-index: 0;
+  z-index: -1;
 }
