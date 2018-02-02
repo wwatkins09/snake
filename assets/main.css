@@ -50,8 +50,8 @@ main {
 }
 
 .modal {
-  position: fixed;
-  left: 43.05%;
+  position: absolute;
+  left: 29.2%;
   top: 100px;
   width: 128px;
   border: 1px solid black;
