@@ -62,16 +62,9 @@ main {
   justify-content: center;
   align-items: center;
   background-color: white;
+  z-index: 50;
 }
 
 .modal p {
   text-align: center;
-}
-
-.showing {
-  z-index: 50;
-}
-
-.hidden {
-  z-index: -1;
 }

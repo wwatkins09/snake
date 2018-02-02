@@ -13,7 +13,6 @@ class View {
 
     this.$el = el;
     this.startModal = window.$d('#start-modal');
-    this.endModal = window.$d('#end-modal');
     this.startModal.keydown(this.handleStart);
   }
 
@@ -40,11 +39,6 @@ class View {
 
   handleStart(event) {
     if (event.keyCode === 83) {
-      this.startModal.removeKeydown(this.handleStart)
-      this.startModal.removeClass("showing");
-      this.startModal.addClass("hidden");
-      this.endModal.removeClass("showing");
-      this.endModal.addClass("hidden");
       this.board = new Board(this.$el);
       this.intervalId = window.setInterval(this.step, 100);
       this.setupGrid();
@@ -90,9 +84,13 @@ class View {
    gameOver() {
      window.clearInterval(this.intervalId);
      this.$el.removeKeydown(this.handleKeyEvent);
-     this.endModal.removeClass('hidden');
-     this.endModal.addClass('showing');
-     this.endModal.keydown(this.handleStart);
+     this.$el.html(
+     `<span id="end-modal" class="modal">
+       <p>GAME OVER</p>
+       <p>Press S to restart!</p>
+     </span>`
+   );
+     this.$el.keydown(this.handleStart);
    }
 
 }
